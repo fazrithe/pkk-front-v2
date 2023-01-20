@@ -25,10 +25,9 @@ function Login() {
 
     function onSubmit({ email, password }) {
         return userService.login(email, password)
-            .then(() => {
+            .then((response) => {
                 // get return url from query parameters or default to '/'
                 const returnUrl = router.query.returnUrl || '/';
-                console.log('ss');
                 router.push(returnUrl);
             })
             .catch(alertService.error);

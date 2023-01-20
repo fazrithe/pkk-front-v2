@@ -20,20 +20,33 @@ export const userService = {
     delete: _delete
 };
 
-function login(email, password) {
-    return fetchWrapper.post(`${baseUrl}/login`, { email, password })
+function login(Email, Password) {
+    return fetchWrapper.post(`${baseUrl}/login`, { Email, Password })
         .then(user => {
             // publish user to subscribers and store in local storage to stay logged in between page refreshes
             userSubject.next(user);
-            localStorage.setItem('user', JSON.stringify(user));
+            if(user.status === true){
+                
+                console.log(user.status);
+                localStorage.setItem('user', JSON.stringify(user));
+                localStorage.setItem('userLog', JSON.stringify(user.status));
+                return user;
+            }else{
+                return logout();
+            }
+        })
+        .catch((error) => {
+            console.log('ss');
+            //assign error to state "validation"
+            setValidation(error.response.data);
+        })
 
-            return user;
-        });
 }
 
 function logout() {
     // remove user from local storage, publish null to user subscribers and redirect to login page
     localStorage.removeItem('user');
+    localStorage.removeItem('userLog');
     userSubject.next(null);
     Router.push('/account/login');
 }
