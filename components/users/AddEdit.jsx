@@ -12,7 +12,6 @@ function AddEdit(props) {
     const user = props?.user;
     const isAddMode = !user;
     const router = useRouter();
-    
     // form validation rules 
     const validationSchema = Yup.object().shape({
         name: Yup.string()
@@ -44,7 +43,7 @@ function AddEdit(props) {
     function onSubmit(data) {
         return isAddMode
             ? createUser(data)
-            : updateUser(user.id, data);
+            : updateUser(user.ID, data);
     }
 
     function createUser(data) {
@@ -57,6 +56,7 @@ function AddEdit(props) {
     }
 
     function updateUser(id, data) {
+        console.log(id);
         return userService.update(id, data, 'users')
             .then(() => {
                 alertService.success('User updated', { keepAfterRouteChange: true });

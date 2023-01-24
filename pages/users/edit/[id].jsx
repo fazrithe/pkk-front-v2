@@ -7,12 +7,13 @@ import { userService, alertService } from 'services';
 export default Edit;
 
 function Edit({ id }) {
+
     const [user, setUser] = useState(null);
 
     useEffect(() => {
         // fetch user and set default form values if in edit mode
         userService.getById(id,'users')
-            .then(x => setUser(x))
+            .then(x => setUser(x.data))
             .catch(alertService.error)
 
         // eslint-disable-next-line react-hooks/exhaustive-deps

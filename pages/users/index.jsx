@@ -13,15 +13,16 @@ function Index() {
         userService.getAll('users').then(x => setUsers(x.data));
     }, []);
 
-    function deleteUser(id) {
+    function deleteUser(ID) {
         setUsers(users.map(x => {
-            if (x.id === id) { x.isDeleting = true; }
+            if (x.ID === ID) { x.isDeleting = true; }
             return x;
         }));
-        userService.delete(id,'users').then(() => {
-            setUsers(users => users.filter(x => x.id !== id));
+        userService.delete(ID,'users').then(() => {
+            setUsers(users => users.filter(x => x.ID !== ID));
         });
     }
+    console.log(users);
 
     return (
         <Layout>
@@ -39,9 +40,9 @@ function Index() {
                 <tbody>
                     {users && users.map(user =>
                         <tr key={user.ID}>
-                            <td>{user.Email}</td>
-                            <td>{user.Username}</td>
-                            <td>{user.Email}</td>
+                            <td>{user.email}</td>
+                            <td>{user.username}</td>
+                            <td>{user.name}</td>
                             <td style={{ whiteSpace: 'nowrap' }}>
                                 <Link href={`/users/edit/${user.ID}`} className="btn btn-sm btn-primary mr-1">Edit</Link>
                                 <button onClick={() => deleteUser(user.ID)} className="btn btn-sm btn-danger btn-delete-user" disabled={user.isDeleting}>
