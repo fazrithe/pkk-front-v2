@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Link, Spinner } from 'components';
 import { Layout } from 'components/users';
 import { userService } from 'services';
+import { alertService } from 'services';
 
 export default Index;
 
@@ -20,6 +21,7 @@ function Index() {
         }));
         userService.delete(ID,'users').then(() => {
             setUsers(users => users.filter(x => x.ID !== ID));
+            alertService.success('User deleted', { keepAfterRouteChange: true });
         });
     }
     console.log(users);

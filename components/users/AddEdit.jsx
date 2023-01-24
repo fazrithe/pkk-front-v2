@@ -48,9 +48,14 @@ function AddEdit(props) {
 
     function createUser(data) {
         return userService.register(data)
-            .then(() => {
-                alertService.success('User added', { keepAfterRouteChange: true });
-                router.push('.');
+            .then((response) => {
+                if(response.status != false ){
+                    alertService.success('User added', { keepAfterRouteChange: true });
+                    router.push('.');
+                }else{
+                    alertService.error(response.message, { keepAfterRouteChange: true });
+                    router.push('/users/add');
+                }
             })
             .catch(alertService.error);
     }
@@ -58,9 +63,14 @@ function AddEdit(props) {
     function updateUser(id, data) {
         console.log(id);
         return userService.update(id, data, 'users')
-            .then(() => {
-                alertService.success('User updated', { keepAfterRouteChange: true });
-                router.push('..');
+            .then((response) => {
+                if(response.status != false ){
+                    alertService.success('User updated', { keepAfterRouteChange: true });
+                    router.push('/users');
+                }else{
+                    alertService.error(response.message, { keepAfterRouteChange: true });
+                    router.push(`/users/ss/${response.id}`);
+                }
             })
             .catch(alertService.error);
     }
