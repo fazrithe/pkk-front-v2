@@ -3,23 +3,26 @@ import { useState, useEffect } from 'react';
 import { Link, Spinner } from 'components';
 import { Layout } from 'components/users';
 import { userService } from 'services';
+import { allService } from 'services/all.service';
+import { alertService } from 'services';
 
 export default Index;
 
 function Index() {
-    const [users, setUsers] = useState(null);
+    const [institutions, setInstitutions] = useState(null);
 
     useEffect(() => {
-        userService.getAll('institutions').then(x => setUsers(x));
+        allService.getAll('institutions').then(x => setInstitutions(x.data));
     }, []);
 
-    function deleteUser(id) {
-        setUsers(users.map(x => {
-            if (x.id === id) { x.isDeleting = true; }
+    function deleteInstitution(ID) {
+        setInstitutions(institutions.map(x => {
+            if (x.ID === ID) { x.isDeleting = true; }
             return x;
         }));
-        userService.delete(id,'users').then(() => {
-            setUsers(users => users.filter(x => x.id !== id));
+        allService.delete(ID,'institutions').then(() => {
+            setInstitutions(institutions => institutions.filter(x => x.ID !== ID));
+            alertService.success('User deleted', { keepAfterRouteChange: true });
         });
     }
 
@@ -36,13 +39,13 @@ function Index() {
                     </tr>
                 </thead>
                 <tbody>
-                    {users && users.map(institusion =>
-                        <tr key={institusion.id}>
+                    {institutions && institutions.map(institusion =>
+                        <tr key={institusion.ID}>
                             <td>{institusion.name}</td>
                             <td>{institusion.address}</td>
                             <td style={{ whiteSpace: 'nowrap' }}>
-                                <Link href={`/users/edit/${institusion.id}`} className="btn btn-sm btn-primary mr-1">Edit</Link>
-                                <button onClick={() => deleteUser(institusion.id)} className="btn btn-sm btn-danger btn-delete-user" disabled={institusion.isDeleting}>
+                                <Link href={`/institutions/edit/${institusion.ID}`} className="btn btn-sm btn-primary mr-1">Edit</Link>
+                                <button onClick={() => deleteInstitution(institusion.ID)} className="btn btn-sm btn-danger btn-delete-user" disabled={institusion.isDeleting}>
                                     {institusion.isDeleting 
                                         ? <span className="spinner-border spinner-border-sm"></span>
                                         : <span>Delete</span>
@@ -51,14 +54,14 @@ function Index() {
                             </td>
                         </tr>
                     )}
-                    {!users &&
+                    {!institutions &&
                         <tr>
                             <td colSpan="4">
                                 <Spinner />
                             </td>
                         </tr>
                     }
-                    {users && !users.length &&
+                    {institutions && !institutions.length &&
                         <tr>
                             <td colSpan="4" className="text-center">
                                 <div className="p-2">No Users To Display</div>
