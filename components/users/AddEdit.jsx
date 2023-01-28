@@ -4,7 +4,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 
 import { Link } from 'components';
-import { userService, alertService } from 'services';
+import { userService, alertService} from 'services';
+import { allService } from 'services/all.service';
+import { useState, useEffect } from 'react';
+import Select from "react-select";
 
 export { AddEdit };
 
@@ -12,6 +15,8 @@ function AddEdit(props) {
     const user = props?.user;
     const isAddMode = !user;
     const router = useRouter();
+    const [institutions , setInstitutions] = useState();
+
     // form validation rules 
     const validationSchema = Yup.object().shape({
         name: Yup.string()
@@ -75,6 +80,14 @@ function AddEdit(props) {
             .catch(alertService.error);
     }
 
+    const options = [institutions];
+
+    useEffect(() => {
+        allService.getAll('institutions').then(x => setInstitutions(
+            x.data
+        ));
+    }, []);
+
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className="form-row">
@@ -86,6 +99,11 @@ function AddEdit(props) {
                 <div className="form-group col">
                     <label>Email</label>
                     <input name="email" type="text" {...register('email')} className={`form-control ${errors.email ? 'is-invalid' : ''}`} />
+                    <div className="invalid-feedback">{errors.email?.message}</div>
+                </div>
+                <div className="form-group col">
+                    <label>Institution</label>
+                    <Select options={options} />
                     <div className="invalid-feedback">{errors.email?.message}</div>
                 </div>
             </div>

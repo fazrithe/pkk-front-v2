@@ -15,17 +15,18 @@ export const userService = {
     logout,
     register,
     getAll,
+    getMe,
     getById,
     update,
     delete: _delete
 };
 
 function login(Email, Password) {
-    return fetchWrapper.post(`${baseUrl}/login`, { Email, Password })
+    return fetchWrapper.post(`${baseUrl}/auth/login`, { Email, Password })
         .then(user => {
             // publish user to subscribers and store in local storage to stay logged in between page refreshes
             userSubject.next(user);
-            if(user.status === true){
+            if(user.status === "success"){
                 
                 console.log(user.status);
                 localStorage.setItem('user', JSON.stringify(user));
@@ -36,7 +37,6 @@ function login(Email, Password) {
             }
         })
         .catch((error) => {
-            console.log('ss');
             //assign error to state "validation"
             setValidation(error.response.data);
         })
@@ -45,6 +45,7 @@ function login(Email, Password) {
 
 function logout() {
     // remove user from local storage, publish null to user subscribers and redirect to login page
+    fetchWrapper.get(`${baseUrl}/auth/logout`);
     localStorage.removeItem('user');
     localStorage.removeItem('userLog');
     userSubject.next(null);
@@ -57,6 +58,10 @@ function register(user) {
 
 function getAll(getUrl) {
     return fetchWrapper.get(`${baseUrl}/${getUrl}`);
+}
+
+function getMe() {
+    return fetchWrapper.get(`${baseUrl}/users/me`);
 }
 
 function getById(id,getUrl) {

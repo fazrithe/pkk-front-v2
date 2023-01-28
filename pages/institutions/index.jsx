@@ -12,9 +12,12 @@ function Index() {
     const [institutions, setInstitutions] = useState(null);
 
     useEffect(() => {
-        allService.getAll('institutions').then(x => setInstitutions(x.data));
+        allService.getAll('institutions')
+        .then(
+            x => setInstitutions(x.data)
+        );
     }, []);
-
+    console.log(institutions);
     function deleteInstitution(ID) {
         setInstitutions(institutions.map(x => {
             if (x.ID === ID) { x.isDeleting = true; }

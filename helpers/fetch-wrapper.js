@@ -13,9 +13,11 @@ export const fetchWrapper = {
 
 function get(url) {
     const requestOptions = {
+        origin: url,
         method: 'GET',
         headers: { 'Content-Type': 'application/json', ...authHeader(url) },
         credentials: 'include',
+        body: JSON.stringify()
     };
     return fetch(url, requestOptions).then(handleResponse);
 }
