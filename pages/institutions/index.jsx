@@ -17,14 +17,13 @@ function Index() {
             x => setInstitutions(x.data)
         );
     }, []);
-    console.log(institutions);
-    function deleteInstitution(ID) {
-        setInstitutions(institutions.map(x => {
-            if (x.ID === ID) { x.isDeleting = true; }
-            return x;
-        }));
-        allService.delete(ID,'institutions').then(() => {
-            setInstitutions(institutions => institutions.filter(x => x.ID !== ID));
+    function deleteInstitution(id) {
+        // setInstitutions(institutions.map(x => {
+        //     if (x.id === id) { x.isDeleting = true; }
+        //     return x;
+        // }));
+        allService.delete(id,'institutions').then(() => {
+            setInstitutions(institutions => institutions.filter(x => x.id !== id));
             alertService.success('User deleted', { keepAfterRouteChange: true });
         });
     }
@@ -43,12 +42,12 @@ function Index() {
                 </thead>
                 <tbody>
                     {institutions && institutions.map(institusion =>
-                        <tr key={institusion.ID}>
+                        <tr key={institusion.id}>
                             <td>{institusion.name}</td>
                             <td>{institusion.address}</td>
                             <td style={{ whiteSpace: 'nowrap' }}>
-                                <Link href={`/institutions/edit/${institusion.ID}`} className="btn btn-sm btn-primary mr-1">Edit</Link>
-                                <button onClick={() => deleteInstitution(institusion.ID)} className="btn btn-sm btn-danger btn-delete-user" disabled={institusion.isDeleting}>
+                                <Link href={`/institutions/edit/${institusion.id}`} className="btn btn-sm btn-primary mr-1">Edit</Link>
+                                <button onClick={() => deleteInstitution(institusion.id)} className="btn btn-sm btn-danger btn-delete-user" disabled={institusion.isDeleting}>
                                     {institusion.isDeleting 
                                         ? <span className="spinner-border spinner-border-sm"></span>
                                         : <span>Delete</span>

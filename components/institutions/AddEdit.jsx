@@ -10,10 +10,10 @@ import { allService } from 'services/all.service';
 export { AddEdit };
 
 function AddEdit(props) {
-    const user = props?.user;
-    const isAddMode = !user;
+    const institution = props?.institution;
+    const isAddMode = !institution;
     const router = useRouter();
-    
+    console.log(institution)
     // form validation rules 
     const validationSchema = Yup.object().shape({
         name: Yup.string()
@@ -25,7 +25,7 @@ function AddEdit(props) {
 
     // set default form values if in edit mode
     if (!isAddMode) {
-        formOptions.defaultValues = props.user;
+        formOptions.defaultValues = props?.institution;
     }
 
     // get functions to build form with useForm() hook
@@ -34,23 +34,23 @@ function AddEdit(props) {
 
     function onSubmit(data) {
         return isAddMode
-            ? createUser(data)
-            : updateUser(user.id, data);
+            ? createInstitution(data)
+            : updateInstitution(institution.id, data);
     }
 
-    function createUser(data) {
-        return allService.create(data)
+    function createInstitution(data) {
+        return allService.create(data,"institutions")
             .then(() => {
-                alertService.success('User added', { keepAfterRouteChange: true });
+                alertService.success('Institution added', { keepAfterRouteChange: true });
                 router.push('.');
             })
             .catch(alertService.error);
     }
 
-    function updateUser(id, data) {
-        return allService.update(id, data, 'users')
+    function updateInstitution(id, data) {
+        return allService.update(id, data, 'institutions')
             .then(() => {
-                alertService.success('User updated', { keepAfterRouteChange: true });
+                alertService.success('Institution updated', { keepAfterRouteChange: true });
                 router.push('..');
             })
             .catch(alertService.error);

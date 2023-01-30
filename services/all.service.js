@@ -18,8 +18,8 @@ export const allService = {
     delete: _delete
 };
 
-function create(params) {
-    return fetchWrapper.post(`${baseUrl}/institutions`, params);
+function create(params,getUrl) {
+    return fetchWrapper.post(`${baseUrl}/${getUrl}`, params);
 }
 
 function getAll(getUrl) {

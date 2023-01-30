@@ -36,6 +36,7 @@ function put(url, body) {
     const requestOptions = {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', ...authHeader(url) },
+        credentials: 'include',
         body: JSON.stringify(body)
     };
     return fetch(url, requestOptions).then(handleResponse);    
@@ -45,7 +46,8 @@ function put(url, body) {
 function _delete(url) {
     const requestOptions = {
         method: 'DELETE',
-        headers: authHeader(url)
+        headers: authHeader(url),
+        credentials: 'include'
     };
     return fetch(url, requestOptions).then(handleResponse);
 }
