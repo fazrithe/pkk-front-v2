@@ -8,6 +8,7 @@ import { userService, alertService} from 'services';
 import { allService } from 'services/all.service';
 import { useState, useEffect } from 'react';
 import Select from "react-select";
+import { useRef } from 'react';
 
 export { AddEdit };
 
@@ -15,21 +16,22 @@ function AddEdit(props) {
     const user = props?.user;
     const isAddMode = !user;
     const router = useRouter();
-    const [institutions , setInstitutions] = useState();
+
+    console.log(user);
 
     // form validation rules 
     const validationSchema = Yup.object().shape({
-        name: Yup.string()
+        Name: Yup.string()
             .required('Name is required'),
-        email: Yup.string()
+        Email: Yup.string()
             .required('Email is required'),
-        username: Yup.string()
-            .required('Username is required'),
-        password: Yup.string()
+        Role: Yup.string(),
+        Photo:  Yup.string(),
+        Password: Yup.string()
             .transform(x => x === '' ? undefined : x)
             .concat(isAddMode ? Yup.string().required('Password is required') : null)
             .min(6, 'Password must be at least 6 characters'),
-        confPassword: Yup.string()
+        passwordConfirm: Yup.string()
             .transform(x => x === '' ? undefined : x)
             .concat(isAddMode ? Yup.string().required('Confirm Password is required') : null)
             .min(6, 'Confirm Password must be at least 6 characters')
@@ -52,7 +54,7 @@ function AddEdit(props) {
     }
 
     function createUser(data) {
-        return userService.register(data)
+        return userService.create(data)
             .then((response) => {
                 if(response.status != false ){
                     alertService.success('User added', { keepAfterRouteChange: true });
@@ -80,45 +82,40 @@ function AddEdit(props) {
             .catch(alertService.error);
     }
 
-    const options = [institutions];
-
-    useEffect(() => {
-        allService.getAll('institutions').then(x => setInstitutions(
-            x.data
-        ));
-    }, []);
+    const options = [
+        { value: 'admin', label: 'Admin' },
+        { value: 'user', label: 'User' }
+    ]
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className="form-row">
                 <div className="form-group col">
                     <label>Name</label>
-                    <input name="name" type="text" {...register('name')} className={`form-control ${errors.name ? 'is-invalid' : ''}`} />
+                    <input name="name" type="text" {...register('Name')} className={`form-control ${errors.name ? 'is-invalid' : ''}`} />
                     <div className="invalid-feedback">{errors.name?.message}</div>
                 </div>
                 <div className="form-group col">
                     <label>Email</label>
-                    <input name="email" type="text" {...register('email')} className={`form-control ${errors.email ? 'is-invalid' : ''}`} />
+                    <input name="email" type="text" {...register('Email')} className={`form-control ${errors.email ? 'is-invalid' : ''}`} />
                     <div className="invalid-feedback">{errors.email?.message}</div>
                 </div>
                 <div className="form-group col">
-                    <label>Institution</label>
-                    <Select options={options} />
+                    <label>Role</label>
+                    <select className='form-control' {...register('Role')}>
+                        <option value="admin">Admin</option>
+                        <option value="user">User</option>
+                    </select>
                     <div className="invalid-feedback">{errors.email?.message}</div>
                 </div>
             </div>
             <div className="form-row">
                 <div className="form-group col">
-                    <label>Username</label>
-                    <input name="username" type="text" {...register('username')} className={`form-control ${errors.username ? 'is-invalid' : ''}`} />
-                    <div className="invalid-feedback">{errors.username?.message}</div>
-                </div>
-                <div className="form-group col">
                     <label>
                         Password
                         {!isAddMode && <em className="ml-1">(Leave blank to keep the same password)</em>}
                     </label>
-                    <input name="password" type="password" {...register('password')} className={`form-control ${errors.password ? 'is-invalid' : ''}`} />
+                    <input name="password" type="password" {...register('Password')} className={`form-control ${errors.password ? 'is-invalid' : ''}`} />
                     <div className="invalid-feedback">{errors.password?.message}</div>
                 </div>
                 <div className="form-group col">
@@ -126,9 +123,13 @@ function AddEdit(props) {
                         Confirm Password
                         {!isAddMode && <em className="ml-1">(Leave blank to keep the same password)</em>}
                     </label>
-                    <input name="confPassword" type="password" {...register('confPassword')} className={`form-control ${errors.confPassword ? 'is-invalid' : ''}`} />
-                    <div className="invalid-feedback">{errors.confPassword?.message}</div>
+                    <input name="asswordConfirm" type="password" {...register('passwordConfirm')} className={`form-control ${errors.confPassword ? 'is-invalid' : ''}`} />
+                    <div className="invalid-feedback">{errors.PasswordConfirm?.message}</div>
                 </div>
+            </div>
+            <div className="form-group">
+                {/* <input type="file" name="photo" className="form-control photo" {...register('photo')} /> */}
+                <input type="text" name="photo" className="form-control" {...register('Photo')} />
             </div>
             <div className="form-group">
                 <button type="submit" disabled={formState.isSubmitting} className="btn btn-primary mr-2">

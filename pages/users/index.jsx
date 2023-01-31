@@ -24,7 +24,6 @@ function Index() {
             alertService.success('User deleted', { keepAfterRouteChange: true });
         });
     }
-    console.log(users);
 
     return (
         <Layout>
@@ -33,18 +32,21 @@ function Index() {
             <table className="table table-striped">
                 <thead>
                     <tr>
+                        <th>Photo</th>
                         <th style={{ width: '30%' }}>Email</th>
-                        <th style={{ width: '30%' }}>Username</th>
                         <th style={{ width: '30%' }}>Name</th>
+                        <th style={{ width: '30%' }}>Role</th>
                         <th style={{ width: '10%' }}></th>
                     </tr>
                 </thead>
                 <tbody>
                     {users && users.map(user =>
                         <tr key={user.ID}>
-                            <td>{user.email}</td>
-                            <td>{user.username}</td>
-                            <td>{user.name}</td>
+                            <td>
+                                <img src={user.Photo} width={50}/></td>
+                            <td>{user.Email}</td>
+                            <td>{user.Name}</td>
+                            <td>{user.Role}</td>
                             <td style={{ whiteSpace: 'nowrap' }}>
                                 <Link href={`/users/edit/${user.ID}`} className="btn btn-sm btn-primary mr-1">Edit</Link>
                                 <button onClick={() => deleteUser(user.ID)} className="btn btn-sm btn-danger btn-delete-user" disabled={user.isDeleting}>

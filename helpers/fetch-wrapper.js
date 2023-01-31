@@ -46,8 +46,9 @@ function put(url, body) {
 function _delete(url) {
     const requestOptions = {
         method: 'DELETE',
-        headers: authHeader(url),
-        credentials: 'include'
+        headers: { 'Content-Type': 'application/json', ...authHeader(url) },
+        credentials: 'include',
+        body: JSON.stringify()
     };
     return fetch(url, requestOptions).then(handleResponse);
 }
