@@ -8,6 +8,7 @@ export const fetchWrapper = {
     get,
     post,
     put,
+    putProfile,
     delete: _delete
 };
 
@@ -40,6 +41,16 @@ function put(url, body) {
         body: JSON.stringify(body)
     };
     return fetch(url, requestOptions).then(handleResponse);    
+}
+
+function putProfile(url, body) {
+    const requestOptions = {
+        method: 'PUT',
+        headers: { ...authHeader(url) },
+        credentials: 'include',
+        body: body
+    };
+    return fetch(url, requestOptions).then((res) => res.json());    
 }
 
 // prefixed with underscored because delete is a reserved word in javascript

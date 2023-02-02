@@ -43,7 +43,18 @@ function Index() {
                     {users && users.map(user =>
                         <tr key={user.ID}>
                             <td>
-                                <img src={user.Photo} width={50}/></td>
+                                {(() => {
+                                    if(user.Photo != null) {
+                                        return(   
+                                        <img src={user.Photo} width={50}/>
+                                        )
+                                    }else{
+                                        return(
+                                        <label>pp</label>
+                                        )
+                                    }
+                                })()}
+                                </td>
                             <td>{user.Email}</td>
                             <td>{user.Name}</td>
                             <td>{user.Role}</td>

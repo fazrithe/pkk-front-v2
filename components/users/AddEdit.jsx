@@ -17,8 +17,6 @@ function AddEdit(props) {
     const isAddMode = !user;
     const router = useRouter();
 
-    console.log(user);
-
     // form validation rules 
     const validationSchema = Yup.object().shape({
         Name: Yup.string()

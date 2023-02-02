@@ -19,6 +19,7 @@ export const userService = {
     getMe,
     getById,
     update,
+    updateProfile,
     delete: _delete
 };
 
@@ -75,6 +76,22 @@ function getById(id,getUrl) {
 
 function update(id, params, getUrl) {
     return fetchWrapper.put(`${baseUrl}/${getUrl}/${id}`, params)
+        .then(x => {
+            // update stored user if the logged in user updated their own record
+            if (id === userSubject.value.id) {
+                // update local storage
+                const user = { ...userSubject.value, ...params };
+                localStorage.setItem('user', JSON.stringify(user));
+
+                // publish updated user to subscribers
+                userSubject.next(user);
+            }
+            return x;
+        });
+}
+
+function updateProfile(id, params, getUrl) {
+    return fetchWrapper.putProfile(`${baseUrl}/${getUrl}/profile/${id}`, params)
         .then(x => {
             // update stored user if the logged in user updated their own record
             if (id === userSubject.value.id) {
